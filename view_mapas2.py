@@ -7,6 +7,8 @@ st.set_page_config(layout="wide")
 
 st.title("Mapas Demográficos 🗺️")
 
+st.write("Se muestra la proporción de población estatal respecto al total de la república mexicana")
+
 # 📁 Rutas
 IMG_DIRS = {
     "VP": "output/VP_ae/mapas",
