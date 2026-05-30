@@ -15,17 +15,29 @@ IMG_DIRS = {
     "VC": "output/VC_ae/mapas"
 }
 
-# 🎛️ Controles
+# Selectores
 tipo = st.selectbox("Tipo de vivienda:", ["VP", "VC"])
-sexo = st.selectbox("Sexo:", ["Hombre", "Mujer"])
-anio = st.selectbox("Año:", ["1990", "1995", "2000", "2005", "2010", "2020"])
+
+sexos = ["Hombre", "Mujer"]
+anios = ["1990", "1995", "2000", "2005", "2010", "2020"]
+
+sexo_sel = st.multiselect(
+    "Sexo:",
+    sexos,
+    default=sexos)
+
+anio_sel = st.multiselect(
+    "Año:",
+    anios,
+    default=anios)
 
 IMG_DIR = IMG_DIRS[tipo]
 
 #  Obtener archivos
 files = [
     f for f in os.listdir(IMG_DIR)
-    if sexo in f and anio in f
+    if any(sexo in f for sexo in sexo_sel)
+    and any(anio in f for anio in anio_sel)
 ]
 
 # ordenar por edad
@@ -37,11 +49,21 @@ files = sorted(
 )
 
 # Mostrar mapas 
-cols = st.columns(2)
+sexo_txt = ", ".join(sexo_sel)
+anio_txt = ", ".join(anio_sel)
 
-for i, file in enumerate(files):
-    img_path = os.path.join(IMG_DIR, file)
+st.subheader(f"Sexo: {sexo_txt} | Año: {anio_txt}")
+
+if not files:
+    st.warning("No hay mapas para estos filtros")
+else:
+    st.write(f"Mapas mostrados: {len(files)}")
     
-    with cols[i % 2]:
-        caption = file.replace("mapa_", "").replace(".png", "")
-        st.image(img_path, caption=caption, use_container_width=True)
+    cols = st.columns(2)
+    
+    for i, file in enumerate(files):
+        img_path = os.path.join(IMG_DIR, file)
+        
+        with cols[i % 2]:
+            caption = file.replace("mapa_", "").replace(".png", "")
+            st.image(img_path, caption=caption, use_container_width=True)
