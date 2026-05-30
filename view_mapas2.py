@@ -20,6 +20,7 @@ tipo = st.selectbox("Tipo de vivienda:", ["VP", "VC"])
 
 sexos = ["Hombre", "Mujer"]
 anios = ["1990", "1995", "2000", "2005", "2010", "2020"]
+edades = ["95-99", "100-104", "105-109", "110-114", "115+"]
 
 sexo_sel = st.multiselect(
     "Sexo:",
@@ -31,6 +32,12 @@ anio_sel = st.multiselect(
     anios,
     default=anios)
 
+edad_sel = st.multiselect(
+    "Edad:",
+    edades,
+    default=edades
+)
+
 IMG_DIR = IMG_DIRS[tipo]
 
 #  Obtener archivos
@@ -38,6 +45,7 @@ files = [
     f for f in os.listdir(IMG_DIR)
     if any(sexo in f for sexo in sexo_sel)
     and any(anio in f for anio in anio_sel)
+    and any(edad in f for edad in edad_sel)
 ]
 
 # ordenar por edad
@@ -51,8 +59,11 @@ files = sorted(
 # Mostrar mapas 
 sexo_txt = ", ".join(sexo_sel)
 anio_txt = ", ".join(anio_sel)
+edad_txt = ", ".join(edad_sel)
 
-st.subheader(f"Sexo: {sexo_txt} | Año: {anio_txt}")
+st.subheader(
+    f"Sexo: {sexo_txt} | Edad: {edad_txt} | Año: {anio_txt}"
+)
 
 if not files:
     st.warning("No hay mapas para estos filtros")
